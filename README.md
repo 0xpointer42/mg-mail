@@ -8,7 +8,7 @@ Simple service which will import document attachments from SMTP account into a [
 Create a configuration file e.g. mgmail.config.py
 Run::
     
-        mgmail --config /path/to/config.py
+        mgmail/app/import_attachment.py --config /path/to/config.py
 
 ## Configuration file
 
