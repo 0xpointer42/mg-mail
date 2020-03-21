@@ -1,7 +1,12 @@
-MailMerge
-================
+MgMail
+============
 
-Simple service which will import document attachments from SMTP account into a [Papermerge Project instance](https://github.com/ciur/papermerge) via REST API
+Simple command line utility which will import document attachments from SMTP account into a [Papermerge Project instance](https://github.com/ciur/papermerge) via REST API
+
+It connects to IMAP account (your email account) via provided username/password/imap_server and iterates through all *unread* email messages.
+
+For every unread message, if it finds a file attachment - it (mg-mail) uploads it via REST API to the papermerge service.
+
 
 ## Usage
 
