@@ -1,3 +1,4 @@
+import sys
 import logging
 import ssl
 import email
@@ -15,18 +16,23 @@ def upload_document(
     papermerge_url,
     api_key
 ):
-    url = f"{papermerge_url}/api/document/upload/{file_title}"
+    url = f"{papermerge_url}/api/document/upload/file1.pdf"
     headers = {
-        'Authentication': f"Token {api_key}"
+        'Authorization': f"Token {api_key}",
+        "Content-Type": "application/binary",
     }
-    files = {
-        'file': open(filepath, 'rb')
-    }
-    requests.post(
-        url,
-        headers=headers,
-        files=files
-    )
+    data = open(filepath, 'rb').read()
+    try:
+        response = requests.put(
+            url,
+            headers=headers,
+            data=data
+        )
+        if response.status_code == 401:
+            print(f"Upload failed: {response.reason}")
+    except requests.exceptions.ConnectionError:
+        print("Failed to connect to {papermerge_url}")
+        sys.exit(1)
 
 
 def read_email_message(message, papermerge_url, api_key):

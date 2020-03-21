@@ -69,13 +69,14 @@ class Application:
         return vars(mod)
 
     def run(self):
-        import_attachment(
+        read_count = import_attachment(
             imap_server=self.cfg['imap_server'],
             username=self.cfg['username'],
             password=self.cfg['password'],
             api_key=self.cfg['api_key'],
             papermerge_url=self.cfg['papermerge_url']
         )
+        print(f"Total messages read {read_count}")
 
 
 def run():
