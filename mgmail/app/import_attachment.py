@@ -70,10 +70,11 @@ class Application:
 
     def run(self):
         import_attachment(
-            imap_server=self.cfg.imap_server,
-            username=self.cfg.username,
-            password=self.cfg.password,
-            api_key=self.cfg.api_key
+            imap_server=self.cfg['imap_server'],
+            username=self.cfg['username'],
+            password=self.cfg['password'],
+            api_key=self.cfg['api_key'],
+            papermerge_url=self.cfg['papermerge_url']
         )
 
 
