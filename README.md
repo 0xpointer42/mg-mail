@@ -20,6 +20,8 @@ Configuration file must have .py extention and be a valid python file, example::
     password = "<pass>"
     api_key = "<API KEY>"
     papermerge_url = "<URL>"  # e.g. http://localhost:8000
+    log_level = "INFO"
+    log_filename = "<path to log file>"
 
 ## Configuration Settings
     
@@ -27,3 +29,5 @@ Configuration file must have .py extention and be a valid python file, example::
 * ``username`` and ``password`` - your imap user account
 * ``api_key`` is papermerge's API key. Get your api_key as explained [here](https://papermerge.readthedocs.io/en/latest/rest_api.html#get-a-token)
 * ``papermerge_url`` - paparmerge server instance url (with scheme i.e with http:// or https:// prefix). E.g. http://localhost:8000
+* ``log_level`` INFO, DEBUG, ERROR, WARNING
+* ``log_filepath`` path to file where all log messages will be written
