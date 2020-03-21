@@ -6,9 +6,6 @@ from imapclient import IMAPClient
 
 
 logger = logging.getLogger(__name__)
-IMAP_SERVER = ""
-USERNAME = ""
-PASSWORD = ""
 
 
 def read_email_message(message):
@@ -40,6 +37,7 @@ def read_email_message(message):
 
 
 def import_attachment(
+    imap_server,
     username,
     password,
 ):
@@ -51,16 +49,16 @@ def import_attachment(
     ssl_context.verify_mode = ssl.CERT_NONE
 
     with IMAPClient(
-        IMAP_SERVER,
+        imap_server,
         ssl_context=ssl_context
     ) as server:
-        server.login(USERNAME, PASSWORD)
+        server.login(username, password)
         server.select_folder('INBOX')
         messages = server.search(['UNSEEN'])
 
         logger.debug(
             f"IMAP UNSEEN messages {len(messages)}"
-            f" for {USERNAME}"
+            f" for {username}"
         )
 
         for uid, message_data in server.fetch(

@@ -5,6 +5,7 @@ import sys
 import traceback
 import importlib.util
 import importlib.machinery
+from mgail.attachment import import_attachment
 
 
 logger = logging.getLogger(__name__)
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 class Application:
 
     def __init__(self):
+        self.cfg = None
         self.load_config()
 
     def load_config(self):
@@ -26,7 +28,7 @@ class Application:
         else:
             config = args.config
 
-        self.load_config_from_filename(config)
+        self.cfg = self.load_config_from_filename(config)
 
     def load_config_from_filename(self, filename):
 
@@ -63,8 +65,15 @@ class Application:
             sys.stderr.flush()
             sys.exit(1)
 
+        return vars(mod)
+
     def run(self):
-        pass
+        import_attachment(
+            imap_server=self.cfg.imap_server,
+            username=self.cfg.username,
+            password=self.cfg.password,
+            api_key=self.cfg.api_key
+        )
 
 
 def run():
