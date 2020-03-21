@@ -26,6 +26,7 @@ def read_email_message(message, api_key):
                 #    filepath=temp.name,
                 #    file_title=part.get_filename(),
                 # Upload document via api_key
+                # something like curl -X POST -d "@file"  <server>/api/document/upload/file1 'Authentication: Token <token>'
                 imported_count += 1
 
     return imported_count
