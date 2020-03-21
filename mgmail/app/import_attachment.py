@@ -9,14 +9,20 @@ import importlib.machinery
 from mgmail.attachment import import_attachment
 
 
-logger = logging.getLogger(__name__)
-
-
 class Application:
 
     def __init__(self):
         self.cfg = None
+        self.logger = None
         self.load_config()
+        self.setup_logger()
+
+    def setup_logger(self):
+        logging.basicConfig(
+            level=self.cfg['log_level'],
+            filename=self.cfg['log_filename'],
+        )
+        self.logger = logging.getLogger('mgmail')
 
     def load_config(self):
         parser = argparse.ArgumentParser(prog='mgmail')
@@ -47,7 +53,7 @@ class Application:
                 )
             else:
                 msg = "config file should have a valid Python extension.\n"
-                logger.warn(msg)
+                self.logger.warn(msg)
                 loader_ = importlib.machinery.SourceFileLoader(
                     module_name,
                     filename
@@ -70,13 +76,10 @@ class Application:
 
     def run(self):
         read_count = import_attachment(
-            imap_server=self.cfg['imap_server'],
-            username=self.cfg['username'],
-            password=self.cfg['password'],
-            api_key=self.cfg['api_key'],
-            papermerge_url=self.cfg['papermerge_url']
+            config=self.cfg,
+            logger=self.logger
         )
-        print(f"Total messages read {read_count}")
+        self.logger.info(f"Total messages read {read_count}")
 
 
 def run():

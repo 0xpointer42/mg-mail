@@ -1,5 +1,4 @@
 import sys
-import logging
 import ssl
 import email
 import tempfile
@@ -7,14 +6,12 @@ import requests
 from imapclient import IMAPClient
 
 
-logger = logging.getLogger(__name__)
-
-
 def upload_document(
     filepath,
     file_title,
     papermerge_url,
-    api_key
+    api_key,
+    logger
 ):
     url = f"{papermerge_url}/api/document/upload/file1.pdf"
     headers = {
@@ -23,19 +20,28 @@ def upload_document(
     }
     data = open(filepath, 'rb').read()
     try:
-        response = requests.put(
+        ret = requests.put(
             url,
             headers=headers,
             data=data
         )
-        if response.status_code == 401:
-            print(f"Upload failed: {response.reason}")
+        if ret.status_code == 401:
+            logger.error(f"Upload failed: {ret.reason}")
+
+        logger.info(
+            f"status: {ret.status_code}; reason: {ret.reason}"
+        )
     except requests.exceptions.ConnectionError:
-        print("Failed to connect to {papermerge_url}")
+        logger.error(f"Failed to connect to {papermerge_url}")
         sys.exit(1)
 
 
-def read_email_message(message, papermerge_url, api_key):
+def read_email_message(
+    message,
+    papermerge_url,
+    api_key,
+    logger
+):
     """
     message is an instance of python's module email.message
     """
@@ -58,7 +64,8 @@ def read_email_message(message, papermerge_url, api_key):
                     filepath=temp.name,
                     file_title=part.get_filename,
                     papermerge_url=papermerge_url,
-                    api_key=api_key
+                    api_key=api_key,
+                    logger=logger
                 )
                 imported_count += 1
 
@@ -66,11 +73,8 @@ def read_email_message(message, papermerge_url, api_key):
 
 
 def import_attachment(
-    imap_server,
-    username,
-    password,
-    papermerge_url,
-    api_key
+    config,
+    logger
 ):
 
     imported_count = 0
@@ -80,16 +84,16 @@ def import_attachment(
     ssl_context.verify_mode = ssl.CERT_NONE
 
     with IMAPClient(
-        imap_server,
+        config['imap_server'],
         ssl_context=ssl_context
     ) as server:
-        server.login(username, password)
+        server.login(config['username'], config['password'])
         server.select_folder('INBOX')
         messages = server.search(['UNSEEN'])
 
         logger.debug(
             f"IMAP UNSEEN messages {len(messages)}"
-            f" for {username}"
+            f" for {config['username']}"
         )
 
         for uid, message_data in server.fetch(
@@ -100,8 +104,9 @@ def import_attachment(
             )
             imported_count = read_email_message(
                 email_message,
-                papermerge_url,
-                api_key
+                config['papermerge_url'],
+                config['api_key'],
+                logger
             )
 
     return imported_count
