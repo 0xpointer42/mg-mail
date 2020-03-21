@@ -5,7 +5,7 @@ import sys
 import traceback
 import importlib.util
 import importlib.machinery
-from mgail.attachment import import_attachment
+from mgmail.attachment import import_attachment
 
 
 logger = logging.getLogger(__name__)
