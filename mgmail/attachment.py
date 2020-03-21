@@ -2,13 +2,34 @@ import logging
 import ssl
 import email
 import tempfile
+import requests
 from imapclient import IMAPClient
 
 
 logger = logging.getLogger(__name__)
 
 
-def read_email_message(message, api_key):
+def upload_document(
+    filepath,
+    file_title,
+    papermerge_url,
+    api_key
+):
+    url = f"{papermerge_url}/api/document/upload/{file_title}"
+    headers = {
+        'Authentication': f"Token {api_key}"
+    }
+    files = {
+        'file': open(filepath, 'rb')
+    }
+    requests.post(
+        url,
+        headers=headers,
+        files=files
+    )
+
+
+def read_email_message(message, papermerge_url, api_key):
     """
     message is an instance of python's module email.message
     """
@@ -27,6 +48,12 @@ def read_email_message(message, api_key):
                 #    file_title=part.get_filename(),
                 # Upload document via api_key
                 # something like curl -X POST -d "@file"  <server>/api/document/upload/file1 'Authentication: Token <token>'
+                upload_document(
+                    filepath=temp.name,
+                    file_title=part.get_filename,
+                    papermerge_url=papermerge_url,
+                    api_key=api_key
+                )
                 imported_count += 1
 
     return imported_count
@@ -36,6 +63,7 @@ def import_attachment(
     imap_server,
     username,
     password,
+    papermerge_url,
     api_key
 ):
 
@@ -66,6 +94,7 @@ def import_attachment(
             )
             imported_count = read_email_message(
                 email_message,
+                papermerge_url,
                 api_key
             )
 
