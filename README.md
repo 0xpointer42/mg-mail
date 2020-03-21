@@ -22,6 +22,7 @@ Configuration file must have .py extention and be a valid python file, example::
     papermerge_url = "<URL>"  # e.g. http://localhost:8000
 
 Where::
+    
     * ``imap_server`` is, well, your imap server.
     * ``username`` and ``password`` - your imap user account
     * ``api_key`` is papermerge's API key.
