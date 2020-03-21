@@ -1,0 +1,7 @@
+.venv
+*.pyc
+tmp/
+__pycache__
+build/
+dist/
+mailmerge.egg-info/
