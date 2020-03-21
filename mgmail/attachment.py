@@ -8,7 +8,7 @@ from imapclient import IMAPClient
 logger = logging.getLogger(__name__)
 
 
-def read_email_message(message):
+def read_email_message(message, api_key):
     """
     message is an instance of python's module email.message
     """
@@ -23,14 +23,9 @@ def read_email_message(message):
             with tempfile.NamedTemporaryFile() as temp:
                 temp.write(part.get_payload(decode=True))
                 temp.flush()
-                #Document.import_file(
-                #    username=username,
                 #    filepath=temp.name,
                 #    file_title=part.get_filename(),
-                #    delete_after_import=False,
-                #    start_ocr_async=ocr_action,
-                #    upload=upload_action
-                #)
+                # Upload document via api_key
                 imported_count += 1
 
     return imported_count
@@ -40,6 +35,7 @@ def import_attachment(
     imap_server,
     username,
     password,
+    api_key
 ):
 
     imported_count = 0
@@ -67,6 +63,9 @@ def import_attachment(
             email_message = email.message_from_bytes(
                 message_data[b'RFC822']
             )
-            imported_count = read_email_message(email_message)
+            imported_count = read_email_message(
+                email_message,
+                api_key
+            )
 
     return imported_count
