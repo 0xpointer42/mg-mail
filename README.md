@@ -25,6 +25,5 @@ Configuration file must have .py extention and be a valid python file, example::
     
 * ``imap_server`` is, well, your imap server.
 * ``username`` and ``password`` - your imap user account
-* ``api_key`` is papermerge's API key.
-* Get your api_key as explained [here](https://papermerge.readthedocs.io/en/latest/rest_api.html#get-a-token)
-* ``papermerge_url`` - paparmerge server instance url (with scheme i.e with http:// or https:// prefix)
+* ``api_key`` is papermerge's API key. Get your api_key as explained [here](https://papermerge.readthedocs.io/en/latest/rest_api.html#get-a-token)
+* ``papermerge_url`` - paparmerge server instance url (with scheme i.e with http:// or https:// prefix). E.g. http://localhost:8000
