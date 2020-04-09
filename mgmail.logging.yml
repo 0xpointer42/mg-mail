@@ -1,0 +1,7 @@
+version: 1
+handlers:
+  xyzconsole:
+    class : logging.StreamHandler
+root:
+  level: INFO
+  handlers: [xyzconsole]

@@ -1,3 +1,5 @@
+import yaml
+import logging.config
 import os
 import argparse
 import logging
@@ -9,20 +11,19 @@ import importlib.machinery
 from mgmail.attachment import import_attachment
 
 
+with open('mgmail.logging.yml', "r") as f:
+    config = yaml.safe_load(f)
+    logging.config.dictConfig(config)
+
+logger = logging.getLogger(__name__)
+
+
 class Application:
 
     def __init__(self):
         self.cfg = None
-        self.logger = None
         self.load_config()
-        self.setup_logger()
-
-    def setup_logger(self):
-        logging.basicConfig(
-            level=self.cfg['log_level'],
-            filename=self.cfg['log_filename'],
-        )
-        self.logger = logging.getLogger('mgmail')
+        self.logger = logging.getLogger(__name__)
 
     def load_config(self):
         parser = argparse.ArgumentParser(prog='mgmail')
