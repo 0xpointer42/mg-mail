@@ -9,7 +9,7 @@ For every unread message, if it finds a file attachment - it (mg-mail) uploads i
 
 ## Installation
 
-  pip install mgmail
+    pip install mgmail
 
 
 ## Usage
