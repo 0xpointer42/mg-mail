@@ -4,5 +4,5 @@ handlers:
     class : logging.StreamHandler
 loggers:
   mgmail:
-    level: DEBUG
+    level: INFO
     handlers: [xyzconsole]

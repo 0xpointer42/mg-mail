@@ -1,4 +1,7 @@
+import ssl
 import requests
+import imapclient
+from imapclient import IMAPClient
 """
 Checks if all connection points are ready
     1. Papermerge DMS - checks if it is possible to connect with given
@@ -16,6 +19,7 @@ class Checker():
 
     def run(self):
         self.checker_mg()
+        self.checker_smtp()
 
     def checker_mg(self):
         papermerge_url = self.cfg.get('papermerge_url', False)
@@ -49,8 +53,38 @@ class Checker():
             self.logger.error(f"Failed to connect to {papermerge_url}")
             return
 
-    def checker_imap(self):
-        pass
+        self.logger.info("MG connection OK")
 
     def checker_smtp(self):
-        pass
+        imap_server = self.cfg.get('imap_server', False)
+        username = self.cfg.get('username', False)
+        password = self.cfg.get('password', False)
+        if not imap_server:
+            self.logger.error(
+                "imap_server key is missing in config file"
+            )
+            return
+        if not username:
+            self.logger.error(
+                "username is missing in config file (smtp username)"
+            )
+            return
+        if not password:
+            self.logger.error(
+                "password is missing in config file"
+            )
+            return
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+
+        with IMAPClient(
+            imap_server,
+            ssl_context=ssl_context
+        ) as server:
+            try:
+                server.login(username, password)
+            except imapclient.exceptions.LoginError:
+                self.logger.error(f"Failed to login to {imap_server}")
+                return
+            self.logger.info("IMAP login OK")
