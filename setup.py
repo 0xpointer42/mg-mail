@@ -6,7 +6,12 @@ with open("README.md", "r") as fh:
 
 setup(
     name="mgmail",
-    version="1.0.0",
+    entry_points={
+        "console_scripts": [
+            "mgmail_imp = mgmail.app.import_attachment:run",
+        ],
+    },
+    version="1.0.1",
     author="Eugen Ciur",
     author_email="eugen@papermerge.com",
     url="https://github.com/papermerge/mg-mail",
