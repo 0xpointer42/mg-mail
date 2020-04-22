@@ -9,6 +9,7 @@ import importlib.util
 import importlib.machinery
 
 from mgmail.attachment import import_attachment
+from mgmail.app.checker import Checker
 
 
 with open('mgmail.logging.yml', "r") as f:
@@ -22,11 +23,19 @@ class Application:
 
     def __init__(self):
         self.cfg = None
+        self.check = False
         self.load_config()
         self.logger = logging.getLogger(__name__)
 
     def load_config(self):
         parser = argparse.ArgumentParser(prog='mgmail')
+        parser.add_argument(
+            "check",
+            help="Checks if it can connect to"
+            " 1. papermerge"
+            " 2. imap server"
+            " 3. smtp account"
+        )
         parser.add_argument(
             "--config", nargs=1
         )
@@ -37,6 +46,9 @@ class Application:
             config = args.config
 
         self.cfg = self.load_config_from_filename(config)
+
+        if args.check:
+            self.check = True
 
     def load_config_from_filename(self, filename):
 
@@ -76,11 +88,19 @@ class Application:
         return vars(mod)
 
     def run(self):
-        read_count = import_attachment(
-            config=self.cfg,
-            logger=self.logger
-        )
-        self.logger.info(f"Total messages read {read_count}")
+        if self.check:
+            self.logger.debug("Checker")
+            checker = Checker(
+                config=self.cfg,
+                logger=self.logger
+            )
+            checker.run()
+        else:
+            read_count = import_attachment(
+                config=self.cfg,
+                logger=self.logger
+            )
+            self.logger.info(f"Total messages read {read_count}")
 
 
 def run():

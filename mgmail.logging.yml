@@ -2,6 +2,7 @@ version: 1
 handlers:
   xyzconsole:
     class : logging.StreamHandler
-root:
-  level: INFO
-  handlers: [xyzconsole]
+loggers:
+  mgmail:
+    level: DEBUG
+    handlers: [xyzconsole]
