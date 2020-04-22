@@ -11,7 +11,7 @@ setup(
             "mgmail_imp = mgmail.app.import_attachment:run",
         ],
     },
-    version="1.0.2",
+    version="1.1.0",
     author="Eugen Ciur",
     author_email="eugen@papermerge.com",
     url="https://github.com/papermerge/mg-mail",
