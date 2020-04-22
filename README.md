@@ -7,13 +7,17 @@ It connects to IMAP account (your email account) via provided username/password/
 
 For every unread message, if it finds a file attachment - it (mg-mail) uploads it via REST API to the papermerge service.
 
+## Installation
+
+  pip install mgmail
+
 
 ## Usage
 
 Create a configuration file e.g. mgmail.config.py
 Run::
     
-        mgmail/app/import_attachment.py --config /path/to/config.py
+        mgmail_imp --config /path/to/config.py
 
 ## Configuration file
 
