@@ -12,19 +12,19 @@ from mgmail.attachment import import_attachment
 from mgmail.app.checker import Checker
 
 
-with open('mgmail.logging.yml', "r") as f:
-    config = yaml.safe_load(f)
-    logging.config.dictConfig(config)
-
-logger = logging.getLogger(__name__)
-
-
 class Application:
 
     def __init__(self):
         self.cfg = None
+        self.logger_config = 'mgmail.logging.yml'
         self.check = False
         self.load_config()
+
+        # load logger configuration from yml file
+        with open(self.logger_config, "r") as f:
+            config = yaml.safe_load(f)
+            logging.config.dictConfig(config)
+
         self.logger = logging.getLogger(__name__)
 
     def load_config(self):
@@ -39,11 +39,18 @@ class Application:
         parser.add_argument(
             "--config", nargs=1
         )
+        parser.add_argument(
+            "--logger-config", nargs=1,
+            help="path to logger configuration file (as yml)"
+        )
         args = parser.parse_args()
         if not args.config:
             config = "mgmail.config.py"
         else:
             config = args.config
+
+        if args.logger_config:
+            self.logger_config = args.logger_config
 
         self.cfg = self.load_config_from_filename(config)
 
