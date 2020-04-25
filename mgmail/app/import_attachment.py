@@ -30,11 +30,10 @@ class Application:
     def load_config(self):
         parser = argparse.ArgumentParser(prog='mgmail')
         parser.add_argument(
-            "check",
-            help="Checks if it can connect to"
-            " 1. papermerge"
-            " 2. imap server"
-            " 3. smtp account"
+            "--check",
+            action='store_true',
+            default=False,
+            help="Checks connections",
         )
         parser.add_argument(
             "--config", nargs=1
@@ -47,7 +46,7 @@ class Application:
         if not args.config:
             config = "mgmail.config.py"
         else:
-            config = args.config
+            config = args.config[0]
 
         if args.logger_config:
             self.logger_config = args.logger_config
@@ -58,7 +57,6 @@ class Application:
             self.check = True
 
     def load_config_from_filename(self, filename):
-
         if not os.path.exists(filename):
             raise RuntimeError("%r doesn't exist" % filename)
 
